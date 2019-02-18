@@ -1,29 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
-const reviewSchema = new mongoose.Schema({
-    date: {
-        type: Date,
-        required: true,
-    },
-    rating: {
+const vendaSchema = new mongoose.Schema({
+    valor_total: {
         type: Number,
-        required: true
+        required: false,
     },
-    comments: {
+    valor_desconto: {
+        type: Number,
+        required: false
+    },
+    nome_cli: {
         type: String,
         required: true,
-        maxlength: 500
+        maxlength: 100
     },
-    restaurant: {
+    produto: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Restaurant'
+        ref: 'Produtos'
     },
-    user: {
+    empresa: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'User'
+        ref: 'Empresas'
     },
 });
-exports.Review = mongoose.model('Review', reviewSchema);
+exports.Vendas = mongoose.model('Vendas', vendaSchema);

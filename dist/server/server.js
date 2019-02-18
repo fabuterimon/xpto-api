@@ -3,10 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const restify = require("restify");
 const mongoose = require("mongoose");
 const environment_1 = require("../common/environment");
-const merge_patch_parser_1 = require("./merge-patch.parser");
+// import { mergePatchBodyParser } from './merge-patch.parser'
 const error_handler_1 = require("./error.handler");
 class Server {
-    // initializeDB():mongoose.MongooseThenable {
     initializeDB() {
         mongoose.Promise = global.Promise;
         return mongoose.connect(environment_1.environment.db.url);
@@ -15,7 +14,7 @@ class Server {
         return new Promise((resolve, reject) => {
             try {
                 this.application = restify.createServer({
-                    name: 'meat-api',
+                    name: 'xpto-api',
                     version: '1.0.0'
                 });
                 /* mostrar querys q estão escodidas */
@@ -23,7 +22,7 @@ class Server {
                 //transformar objeto buffer de objeto json em body
                 this.application.use(restify.plugins.bodyParser());
                 //Parse para formato espacial do PATCH
-                this.application.use(merge_patch_parser_1.mergePatchBodyParser);
+                // this.application.use(mergePatchBodyParser)
                 //routes
                 for (let router of routers) {
                     router.applyRoutes(this.application);
@@ -39,7 +38,7 @@ class Server {
         });
     }
     //bootstrap recebe um arry de routers inicializado
-    // vazio para caso ninuem passe nada par o bootstrap
+    // vazio para caso ninguem passe nada para o bootstrap
     bootstrap(routers = []) {
         // return this.initRoutes(routers).then(() => this)
         return this.initializeDB().then(() => this.initRoutes(routers).then(() => this));

@@ -1,13 +1,14 @@
 import { Server } from './server/server'
-import { usersRouter } from './users/users.router'
-import {restaurantsRouter} from './restaurants/restaurtants.router'
-import {reviewsRouter} from './reviews/reviews.router'
+import { produtosRouter } from './produto/produto.router'
+import { empresasRouter } from './empresa/empresa.router'
+import { vendasRouter } from './venda/vendas.router'
 
 const server = new Server()
+
 server.bootstrap([
-  usersRouter,
-  restaurantsRouter,
-  reviewsRouter
+  produtosRouter,
+  empresasRouter,
+  vendasRouter
 ]).then(server => {
   console.log('Server is listening on:', server.application.address())
 }).catch(error => {
