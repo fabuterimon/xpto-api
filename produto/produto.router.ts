@@ -1,21 +1,49 @@
-import {ModelRouter} from '../common/model-router'
+import { ModelRouter } from '../common/model-router'
 import * as restify from 'restify'
-import {Produtos} from './produto.model'
+import { Produtos } from './produto.model'
 
 class ProdutosRouter extends ModelRouter<Produtos> {
-  constructor(){
+  constructor() {
     super(Produtos)
   }
 
-  applyRoutes(application: restify.Server){
+  // update = (req, resp, next)=>{
+  //   const options = {runValidators: true, new : true}
+  //   this.model.findByIdAdUpdate(req.params.id, req.body, options)
+  //       .then(this.render(resp, next))
+  //       .catch(next)
+  // }
+  //`${this.novoProduto}`
+  //{nome:'Panela de Vapor'}
+
+  idProcura = '5c69f29cbdf58e49943ac27a'
+  novoProduto = 'Panela a Vapor'
+
+  applyRoutes(application: restify.Server) {
+
+
     application.get('/produtos', this.findAll)
-    application.get('/produtos/:id', [this.validateId ,this.findById])
+    application.get('/produtos/:id', [this.validateId, this.findById])
     application.post('/produtos', this.save)
-    application.put('/produtos/:id',this.replace)
-    application.patch('/produtos/:id', this.update)
-    application.del('/produtos/:id',this.delete)
+    application.put('/produtos/:id', this.replace)
+    //application.patch('/produtos/:id', this.update)
+    // application.patch('/produtos/', this.updateOne)
+    application.del('/produtos/:id', this.delete)
+
+  //  this.updateName(this.idProcura, this.novoProduto)
+
   }
 
+
+
+
+
+
+
+
+
 }
+
+
 
 export const produtosRouter = new ProdutosRouter()

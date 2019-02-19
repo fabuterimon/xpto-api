@@ -1,6 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
+const listaProdutoSchema = new mongoose.Schema({
+    produto: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+        ref: 'Produtos',
+        default: []
+    }
+});
 const vendaSchema = new mongoose.Schema({
     valor_total: {
         type: Number,
@@ -15,10 +23,10 @@ const vendaSchema = new mongoose.Schema({
         required: true,
         maxlength: 100
     },
-    produto: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Produtos'
+    produtos: {
+        type: [listaProdutoSchema],
+        required: false,
+        default: []
     },
     empresa: {
         type: mongoose.Schema.Types.ObjectId,

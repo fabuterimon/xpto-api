@@ -70,4 +70,24 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
     }).catch(next)
   }
 
+  updateName = (idProcura, novoProduto) => {
+    this.model.findOneAndUpdate({ _id: idProcura }, { nome: novoProduto }, { runValidators: true, new: true }).then((data) => {
+      if (data === null) {
+        throw new Error('Cat Not Found');
+      }
+      // resp.json({ message: 'Cat updated!' })
+      console.log(novoProduto)
+      console.log("New cat data", data);
+      return 0
+    }).catch((error) => {
+      /*
+          Deal with all your errors here with your preferred error handle middleware / method
+       */
+      // resp.status(500).json({ message: 'Some Error!' })
+      console.log(error);
+    }
+
+    );
+  }
+
 }
