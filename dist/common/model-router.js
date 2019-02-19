@@ -78,6 +78,23 @@ class ModelRouter extends router_1.Router {
                 console.log(error);
             });
         };
+        this.updateQuantidade = (idProcura, valor) => {
+            this.model.findOneAndUpdate({ _id: idProcura }, { valor_total: valor }, { runValidators: true, new: true }).then((data) => {
+                if (data === null) {
+                    throw new Error('Cat Not Found');
+                }
+                // resp.json({ message: 'Cat updated!' })
+                console.log(valor);
+                console.log("New cat data", data);
+                return 0;
+            }).catch((error) => {
+                /*
+                    Deal with all your errors here with your preferred error handle middleware / method
+                 */
+                // resp.status(500).json({ message: 'Some Error!' })
+                console.log(error);
+            });
+        };
     }
     prepareOne(query) {
         return query;

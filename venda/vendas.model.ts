@@ -4,12 +4,14 @@ import {Produtos} from '../produto/produto.model'
 
 export interface listaProdutoSchema extends mongoose.Document{
   produto: mongoose.Types.ObjectId | Produtos
+  quantidade : Number
 }
 
 export interface Vendas extends mongoose.Document {
   valor_total: number,
   valor_desconto: number,
   nome_cli: string,
+  produto: mongoose.Types.ObjectId | Produtos
   produtos: listaProdutoSchema[],
   empresa: mongoose.Types.ObjectId | Empresas,
 }
@@ -17,10 +19,14 @@ export interface Vendas extends mongoose.Document {
 const listaProdutoSchema = new mongoose.Schema({
   produto: {
     type: mongoose.Schema.Types.ObjectId,
-    required: false,
-    ref: 'Produtos',
-    default:[]
-  }})
+    required: true,
+    ref: 'Produtos'
+  },
+  quantidade:{
+    type: Number,
+    required: true
+  }
+})
 
 const vendaSchema = new mongoose.Schema({
   valor_total: {
@@ -35,6 +41,11 @@ const vendaSchema = new mongoose.Schema({
     type: String,
     required: true,
     maxlength: 100
+  },
+  produto: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Produtos'
   },
   produtos: {
       type: [listaProdutoSchema],

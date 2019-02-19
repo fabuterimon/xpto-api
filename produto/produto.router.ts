@@ -16,9 +16,6 @@ class ProdutosRouter extends ModelRouter<Produtos> {
   //`${this.novoProduto}`
   //{nome:'Panela de Vapor'}
 
-  idProcura = '5c69f29cbdf58e49943ac27a'
-  novoProduto = 'Panela a Vapor'
-
   applyRoutes(application: restify.Server) {
 
 
