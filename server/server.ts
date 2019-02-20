@@ -27,15 +27,11 @@ export class Server {
         this.application.use(restify.plugins.queryParser());
         //transformar objeto buffer de objeto json em body
         this.application.use(restify.plugins.bodyParser());
-        //Parse para formato espacial do PATCH
-        // this.application.use(mergePatchBodyParser)
 
         //routes
-
         for (let router of routers) {
           router.applyRoutes(this.application)
         }
-
 
         this.application.listen(environment.server.port, () => {
           resolve(this.application)

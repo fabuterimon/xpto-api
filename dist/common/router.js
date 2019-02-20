@@ -2,8 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 const restify_errors_1 = require("restify-errors");
-// Verifica existe resosta valida para requisião e repassa e com o
-// EventEmitter eu controlo o caso de mostrar o password no get
+// Verifica existe resposta valida para requisião e repassa 
 class Router extends events_1.EventEmitter {
     render(response, next) {
         return (document) => {

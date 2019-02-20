@@ -3,9 +3,7 @@ import { EventEmitter } from 'events'
 import { NotFoundError } from 'restify-errors'
 
 
-// Verifica existe resosta valida para requisião e repassa e com o
-// EventEmitter eu controlo o caso de mostrar o password no get
-
+// Verifica existe resposta valida para requisião e repassa 
 export abstract class Router extends EventEmitter {
 
   abstract applyRoutes(application: restify.Server)

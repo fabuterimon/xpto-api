@@ -7,40 +7,16 @@ class ProdutosRouter extends ModelRouter<Produtos> {
     super(Produtos)
   }
 
-  // update = (req, resp, next)=>{
-  //   const options = {runValidators: true, new : true}
-  //   this.model.findByIdAdUpdate(req.params.id, req.body, options)
-  //       .then(this.render(resp, next))
-  //       .catch(next)
-  // }
-  //`${this.novoProduto}`
-  //{nome:'Panela de Vapor'}
-
   applyRoutes(application: restify.Server) {
 
-
-    application.get('/produtos', this.findAll)
-    application.get('/produtos/:id', [this.validateId, this.findById])
-    application.post('/produtos', this.save)
-    application.put('/produtos/:id', this.replace)
-    //application.patch('/produtos/:id', this.update)
-    // application.patch('/produtos/', this.updateOne)
-    application.del('/produtos/:id', this.delete)
-
-  //  this.updateName(this.idProcura, this.novoProduto)
-
+    application.get('/produtos', this.findAll) //Listar
+    application.get('/produtos/:id', [this.validateId, this.findById])  //Listar por ID
+    application.post('/produtos', this.save) //Adicionar
+    application.put('/produtos/:id', [this.validateId,this.replace]) //Substituir
+    application.patch('/produtos/:id', [this.validateId,this.replace]) //Modificar
+    application.del('/produtos/:id', [this.validateId,this.delete])  //Apagar
   }
 
-
-
-
-
-
-
-
-
 }
-
-
 
 export const produtosRouter = new ProdutosRouter()

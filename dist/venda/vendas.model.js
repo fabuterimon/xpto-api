@@ -26,11 +26,6 @@ const vendaSchema = new mongoose.Schema({
         required: true,
         maxlength: 100
     },
-    produto: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Produtos'
-    },
     produtos: {
         type: [listaProdutoSchema],
         required: false,

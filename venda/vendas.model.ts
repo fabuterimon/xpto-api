@@ -11,7 +11,6 @@ export interface Vendas extends mongoose.Document {
   valor_total: number,
   valor_desconto: number,
   nome_cli: string,
-  produto: mongoose.Types.ObjectId | Produtos
   produtos: listaProdutoSchema[],
   empresa: mongoose.Types.ObjectId | Empresas,
 }
@@ -41,12 +40,7 @@ const vendaSchema = new mongoose.Schema({
     type: String,
     required: true,
     maxlength: 100
-  },
-  produto: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Produtos'
-  },
+  },  
   produtos: {
       type: [listaProdutoSchema],
       required: false,

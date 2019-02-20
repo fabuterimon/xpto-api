@@ -7,12 +7,12 @@ class EmpresasRouter extends model_router_1.ModelRouter {
         super(empresa_model_1.Empresas);
     }
     applyRoutes(application) {
-        application.get('/empresas', this.findAll);
-        application.get('/empresas/:id', [this.validateId, this.findById]);
-        application.post('/empresas', this.save);
-        application.put('/empresas/:id', this.replace);
-        application.patch('/empresas/:id', this.update);
-        application.del('/empresas/:id', this.delete);
+        application.get('/empresas', this.findAll); //Listar
+        application.get('/empresas/:id', [this.validateId, this.findById]); //Listar por ID
+        application.post('/empresas', this.save); //Adicionar
+        application.put('/empresas/:id', [this.validateId, this.replace]); //Substituir
+        application.patch('/empresas/:id', [this.validateId, this.update]); //Modificar
+        application.del('/empresas/:id', [this.validateId, this.delete]); //Apagar 
     }
 }
 exports.empresasRouter = new EmpresasRouter();
