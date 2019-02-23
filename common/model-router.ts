@@ -11,7 +11,7 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
   protected prepareOne(query: mongoose.DocumentQuery<D, D>): mongoose.DocumentQuery<D, D> {
     return query
   }
-//Verifica se o Id é de um tipo válido  
+//Verifica se o Id é de um tipo válido
   validateId = (req, resp, next) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       next(new NotFoundError('Document not found'))
@@ -59,7 +59,7 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
   //Atualiza parte do documento
   update = (req, resp, next) => {
     const options = { runValidators: true, new: true }
-    this.model.findByIdAndUpdate(req.params.id, req.body, options)
+    this.model.findByIdAndUpdate(req.params.id, req.body, options).exec()
       .then(this.render(resp, next))
       .catch(next)
   }
@@ -104,5 +104,7 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
       throw new NotFoundError('Documento não encontrado')
     })
   }
+
+
 
 }
