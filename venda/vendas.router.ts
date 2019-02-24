@@ -14,99 +14,83 @@ class VendasRouter extends ModelRouter<Vendas>{
   }
 
 
-  // findProdutos = (req, resp, next) => {
-  //   Vendas.findById(req.params.id, "+produtos.produto")
-  //     .then(vendas => {
-  //       if (!vendas) {
-  //         console.log(`${req.body}`)
-  //         throw new NotFoundError('Vendas not found')
-  //       } else {
-  //         var soma = 0
-  //         var quantidade = 0
-  //         var valor_produto = 0
-  //         var desconto = 0
-  //
-  //         /*
-  //         Achar o Percentual de descontos da empresa cujo id está associado a Venda
-  //         */
-  //         Empresas.findById(vendas.empresa._id).then(emp => {
-  //
-  //           if (!emp) {
-  //             console.log(`${req.body}`)
-  //             throw new NotFoundError('Empresa not found')
-  //           } else {
-  //             desconto = emp.perc_desconto
-  //             console.log(`1: ${desconto}`)
-  //           }
-  //           return next()
-  //         })
-  //
-  //         /*
-  //           Percorrer o vetor de Produtos para pegar a quantidade e multiplicar pelo preço
-  //         */
-  //         vendas.produtos.forEach(item => {
-  //           if (!item) {
-  //             console.log(`${req.body}`)
-  //             throw new NotFoundError('Produtos not found')
-  //           } else {
-  //             Produtos.findById(item.produto._id).then(prod => {
-  //               if (!prod) {
-  //                 console.log(`2: ${req.body}`)
-  //                 throw new NotFoundError('Produto Original not found')
-  //               } else {
-  //                 //prod.quant_estoque = prod.quant_estoque - item.quantidade
-  //                 valor_produto = item.quantidade * prod.preco
-  //                 console.log(`3: valor_produto: ${valor_produto}`)
-  //               }
-  //             })
-  //             console.log(`4.0: soma: ${valor_produto}`)
-  //             soma = soma + valor_produto
-  //             console.log(`4.1: soma: ${soma}`)
-  //           }
-  //           return next()
-  //         })
-  //
-  //         console.log(`5: Soma dos Produtos: ${soma}`)
-  //         console.log(`6: ${desconto}`)
-  //         // console.log(`${valor_desconto}`)
-  //         //
-  //         // this.updateQuantidade(req.params.id, soma)
-  //         // var valor_desconto = (soma - (soma * desconto))
-  //         //
-  //         // console.log(`Soma dos Produtos: ${soma}`)
-  //         // console.log(`${desconto}`)
-  //         // console.log(`${valor_desconto}`)
-  //         //
-  //         // this.updateDesconto(req.params.id, valor_desconto)
-  //       }
-  //       resp.json(vendas)
-  //       return next()
-  //     }).catch(next)
-  // }
-  //
-  // updateQuantidade = (idProcura, valor) => {
-  //   this.model.findOneAndUpdate({ _id: idProcura }, { valor_total: valor }, { runValidators: true, new: true }).then((data) => {
-  //     if (data === null) {
-  //       throw new Error('Cat Not Found');
-  //     }
-  //     return 0
-  //   }).catch((error) => {
-  //     // resp.status(500).json({ message: 'Some Error!' })
-  //     console.log(error);
-  //   })
-  // }
-  //
-  // updateDesconto = (idProcura, valor) => {
-  //   this.model.findOneAndUpdate({ _id: idProcura }, { valor_desconto: valor }, { runValidators: true, new: true }).then((data) => {
-  //     if (data === null) {
-  //       throw new Error('Cat Not Found');
-  //     }
-  //     return 0
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   })
-  // }
+  atualizaVenda = (req, resp, next) => {
+    Vendas.findById(req.params.id, "+produtos.produto").exec()
+      .then(vendas => {
+        if (!vendas) {
+          console.log(`${req.body}`)
+          throw new NotFoundError('Vendas not found')
+        } else {
 
+          var valor_total = 0
+          var valor_total_json
+          var valor_produto = 0
+          var desconto
+          var valor_desconto = 0
+          var novo_valor_json
+
+          /*
+          Achar o Percentual de descontos da empresa cujo id está associado a Venda
+          */
+          desconto = Empresas.findById(vendas.empresa._id).exec().then(emp => {
+            if (!emp) {
+              console.log(`${req.body}`)
+              throw new NotFoundError('Empresa not found')
+            } else {
+              desconto = emp.perc_desconto
+              console.log(`1: ${desconto}`)
+              return desconto
+            }
+          })
+
+          /*
+            Percorrer o vetor de Produtos para pegar a quantidade e multiplicar pelo preço
+          */
+          vendas.produtos.forEach(item => {
+            if (!item) {
+              console.log(`${req.body}`)
+              throw new NotFoundError('Produtos not found')
+            } else {
+              Produtos.findById(item.produto._id).exec().then(prod => {
+                if (!prod) {
+                  console.log(`2: ${req.body}`)
+                  throw new NotFoundError('Produto Original not found')
+                } else {
+
+                  /* Pegando a quantidade e multiplicando pelo preço e
+                     Somando o valor total da venda */
+                  valor_produto = <number>item.quantidade * prod.preco
+                  valor_total = valor_total + valor_produto
+                  valor_total_json = JSON.parse(`{"valor_total": ${valor_total} }`);
+                  this.updateJson(req, resp, next, valor_total_json)
+
+                  /* Calculando valor de desconto da venda */
+                  valor_desconto = valor_total - (<number>valor_total * desconto)
+                  novo_valor_json = JSON.parse(`{"valor_desconto": ${valor_desconto} }`);
+                  this.updateJson(req, resp, next, novo_valor_json)
+                }
+              })
+            }
+          })
+        }
+        resp.json(vendas)
+        return next()
+      }).catch(next)
+  }
+
+
+
+  updateJson = (req, resp, next, valor) => {
+    const options = { runValidators: true, new: true }
+    this.model.findByIdAndUpdate(req.params.id, valor, options).exec().then((data) => {
+      if (data === null) {
+        throw new NotFoundError('Documento não encontrado')
+      }
+      return 0
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
 
   adicionaProdutos = (req, resp, next) => {
     Vendas.findById(req.params.id).then(vendas => {
@@ -114,6 +98,33 @@ class VendasRouter extends ModelRouter<Vendas>{
         throw new NotFoundError('Vendas not found')
       } else {
         vendas.produtos.push(req.body)
+        console.log(`${req.body.produto}`)
+
+        var quant_estoque
+        var novo_quant_estoque_json
+        // Verifico se o Id do Produto está na tabela Produto
+
+        Produtos.findById(req.body.produto).exec().then(prod =>{
+          if (!prod) {
+            console.log(`${req.body}`)
+            throw new NotFoundError('Vendas not found')
+          } else {
+
+            /* Atualizando Valor em Estoque do Produto */
+            quant_estoque = prod.quant_estoque - <number>req.body.quantidade
+            novo_quant_estoque_json = JSON.parse(`{"quant_estoque": ${quant_estoque} }`);
+
+            Produtos.findByIdAndUpdate(prod._id, novo_quant_estoque_json).exec().then((data) => {
+              if (data === null) {
+                throw new NotFoundError('Documento não encontrado')
+              }
+              return 0
+            }).catch((error) => {
+              console.log(error);
+            })
+
+          }
+        })
         vendas.save()
           .then(this.render(resp, next))
           .catch(next)
@@ -138,7 +149,7 @@ class VendasRouter extends ModelRouter<Vendas>{
     application.get('/vendas', this.findAll) //Listar
     application.get('/vendas/:id', [this.validateId, this.findById]) //Listar Por ID
     application.post('/vendas', this.save) //Adicionar
-    application.post('/vendas/:id/produtos', this.adicionaProdutos) //Adicionar Produtos a Venda
+    application.post('/vendas/:id/produtos', [this.adicionaProdutos, this.atualizaVenda]) //Adicionar Produtos a Venda
   }
 }
 

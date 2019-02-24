@@ -7,7 +7,7 @@ class ModelRouter extends router_1.Router {
     constructor(model) {
         super();
         this.model = model;
-        //Verifica se o Id é de um tipo válido  
+        //Verifica se o Id é de um tipo válido
         this.validateId = (req, resp, next) => {
             if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
                 next(new restify_errors_1.NotFoundError('Document not found'));
@@ -52,7 +52,7 @@ class ModelRouter extends router_1.Router {
         //Atualiza parte do documento
         this.update = (req, resp, next) => {
             const options = { runValidators: true, new: true };
-            this.model.findByIdAndUpdate(req.params.id, req.body, options)
+            this.model.findByIdAndUpdate(req.params.id, req.body, options).exec()
                 .then(this.render(resp, next))
                 .catch(next);
         };
@@ -67,6 +67,17 @@ class ModelRouter extends router_1.Router {
                 }
                 return next();
             }).catch(next);
+        };
+        this.updateJson = (req, resp, next, valor) => {
+            const options = { runValidators: true, new: true };
+            this.model.findByIdAndUpdate(req.params.id, valor, options).exec().then((data) => {
+                if (data === null) {
+                    throw new restify_errors_1.NotFoundError('Documento não encontrado');
+                }
+                return 0;
+            }).catch((error) => {
+                console.log(error);
+            });
         };
         this.updateName = (idProcura, novoProduto) => {
             this.model.findOneAndUpdate({ _id: idProcura }, { nome: novoProduto }, { runValidators: true, new: true }).then((data) => {

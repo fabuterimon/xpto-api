@@ -76,6 +76,18 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
     }).catch(next)
   }
 
+  updateJson = (req, resp, next, valor) => {
+    const options = { runValidators: true, new: true }
+    this.model.findByIdAndUpdate(req.params.id, valor, options).exec().then((data) => {
+      if (data === null) {
+        throw new NotFoundError('Documento não encontrado')
+      }
+      return 0
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
 
   updateName = (idProcura, novoProduto) => {
     this.model.findOneAndUpdate({ _id: idProcura }, { nome: novoProduto }, { runValidators: true, new: true }).then((data) => {
@@ -104,6 +116,7 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
       throw new NotFoundError('Documento não encontrado')
     })
   }
+
 
 
 
