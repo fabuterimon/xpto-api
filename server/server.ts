@@ -2,7 +2,6 @@ import * as restify from 'restify'
 import * as mongoose from 'mongoose'
 import { environment } from '../common/environment'
 import { Router } from '../common/router'
-// import { mergePatchBodyParser } from './merge-patch.parser'
 import {handleError} from './error.handler'
 
 export class Server {
@@ -14,10 +13,13 @@ export class Server {
     return mongoose.connect(environment.db.url);
   }
 
+
+  //
   initRoutes(routers: Router[]): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
 
+        // criação do servidor
         this.application = restify.createServer({
           name: 'xpto-api',
           version: '1.0.0'
