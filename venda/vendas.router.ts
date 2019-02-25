@@ -78,8 +78,6 @@ class VendasRouter extends ModelRouter<Vendas>{
       }).catch(next)
   }
 
-
-
   updateJson = (req, resp, next, valor) => {
     const options = { runValidators: true, new: true }
     this.model.findByIdAndUpdate(req.params.id, valor, options).exec().then((data) => {

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleError = (req, resp, err, done) => {
+    //restify procura toJason para criar o corpo do objeto error
     console.log(err);
     err.toJSON = () => {
         return {

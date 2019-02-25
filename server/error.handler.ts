@@ -1,6 +1,7 @@
 import * as restify from 'restify'
 
 export const handleError = (req: restify.Request, resp: restify.Response, err, done) => {
+  //restify procura toJason para criar o corpo do objeto error
   console.log(err)
   err.toJSON = () => {
     return {

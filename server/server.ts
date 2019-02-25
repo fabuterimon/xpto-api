@@ -13,7 +13,6 @@ export class Server {
     return mongoose.connect(environment.db.url);
   }
 
-
   //
   initRoutes(routers: Router[]): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -39,6 +38,7 @@ export class Server {
           resolve(this.application)
         })
 
+        //Trata os erros q vem do restify
         this.application.on('restifyError', handleError)
 
 

@@ -3,11 +3,13 @@ import { EventEmitter } from 'events'
 import { NotFoundError } from 'restify-errors'
 
 
-// Verifica existe resposta valida para requisião e repassa 
+// Verifica existe resposta valida para requisião e repassa
+// EventEmitter manda um evento 
 export abstract class Router extends EventEmitter {
 
   abstract applyRoutes(application: restify.Server)
 
+  //se o documente existir eu retorno a respota
   render(response: restify.Response, next: restify.Next) {
     return (document) => {
       if (document) {

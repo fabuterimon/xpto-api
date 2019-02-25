@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("./router");
 const mongoose = require("mongoose");
 const restify_errors_1 = require("restify-errors");
+// Defino um objeto gérico D rw
 class ModelRouter extends router_1.Router {
     constructor(model) {
         super();

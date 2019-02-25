@@ -29,6 +29,7 @@ class Server {
                 this.application.listen(environment_1.environment.server.port, () => {
                     resolve(this.application);
                 });
+                //Trata os erros q vem do restify
                 this.application.on('restifyError', error_handler_1.handleError);
             }
             catch (error) {

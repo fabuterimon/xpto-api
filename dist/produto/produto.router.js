@@ -11,7 +11,7 @@ class ProdutosRouter extends model_router_1.ModelRouter {
         application.get('/produtos/:id', [this.validateId, this.findById]); //Listar por ID
         application.post('/produtos', this.save); //Adicionar
         application.put('/produtos/:id', [this.validateId, this.replace]); //Substituir
-        application.patch('/produtos/:id', [this.validateId, this.replace]); //Modificar
+        application.patch('/produtos/:id', [this.validateId, this.update]); //Modificar
         application.del('/produtos/:id', [this.validateId, this.delete]); //Apagar
     }
 }
